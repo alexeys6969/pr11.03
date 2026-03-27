@@ -1,14 +1,19 @@
 package com.example.pr11;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.health.PackageHealthStats;
 import android.widget.TextView;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         result = findViewById(R.id.result);
-        _LocationManager = (LocationManager) getSystemService(LOCALE_SERVICE);
+        _LocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
     }
 
     LocationListener _LocationListener = new LocationListener() {
@@ -43,4 +48,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+    public boolean GetPermissionGPS() {
+        ACCESS_FINE_LOCATION = ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION);
+        ACCESS_COARSE_LOCATION = ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        return ACCESS_FINE_LOCATION == PackageManager.PERMISSION_GRANTED ||
+                ACCESS_COARSE_LOCATION == PackageManager.PERMISSION_GRANTED;
+    }
+    public void OnGetGPS(View view) {
+        if(GetPermissionGPS() == false) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
 }
